@@ -7,310 +7,174 @@ import { matchSorter } from "match-sorter";
 import sortBy from "sort-by";
 import invariant from "tiny-invariant";
 
-type ContactMutation = {
+type MovieMutation = {
   id?: string;
-  first?: string;
-  last?: string;
-  avatar?: string;
-  twitter?: string;
-  notes?: string;
+  title?: string;
+  director?: string;
+  poster?: string;
+  releaseDate?: string;
+  synopsis?: string;
+  link?: string;
   favorite?: boolean;
 };
 
-export type ContactRecord = ContactMutation & {
+export type MovieRecord = MovieMutation & {
   id: string;
   createdAt: string;
 };
 
-////////////////////////////////////////////////////////////////////////////////
-// This is just a fake DB table. In a real app you'd be talking to a real db or
-// fetching from an existing API.
-const fakeContacts = {
-  records: {} as Record<string, ContactRecord>,
+const fakeMovies = {
+  records: {} as Record<string, MovieRecord>,
 
-  async getAll(): Promise<ContactRecord[]> {
-    return Object.keys(fakeContacts.records)
-      .map((key) => fakeContacts.records[key])
-      .sort(sortBy("-createdAt", "last"));
+  async getAll(): Promise<MovieRecord[]> {
+    return Object.keys(fakeMovies.records)
+      .map((key) => fakeMovies.records[key])
+      .sort(sortBy("-createdAt", "title"));
   },
 
-  async get(id: string): Promise<ContactRecord | null> {
-    return fakeContacts.records[id] || null;
+  async get(id: string): Promise<MovieRecord | null> {
+    return fakeMovies.records[id] || null;
   },
 
-  async create(values: ContactMutation): Promise<ContactRecord> {
+  async create(values: MovieMutation): Promise<MovieRecord> {
     const id = values.id || Math.random().toString(36).substring(2, 9);
     const createdAt = new Date().toISOString();
-    const newContact = { id, createdAt, ...values };
-    fakeContacts.records[id] = newContact;
-    return newContact;
+    const newMovie = { id, createdAt, ...values };
+    fakeMovies.records[id] = newMovie;
+    return newMovie;
   },
 
-  async set(id: string, values: ContactMutation): Promise<ContactRecord> {
-    const contact = await fakeContacts.get(id);
-    invariant(contact, `No contact found for ${id}`);
-    const updatedContact = { ...contact, ...values };
-    fakeContacts.records[id] = updatedContact;
-    return updatedContact;
+  async set(id: string, values: MovieMutation): Promise<MovieRecord> {
+    const movie = await fakeMovies.get(id);
+    invariant(movie, `No movie found for ${id}`);
+    const updatedMovie = { ...movie, ...values };
+    fakeMovies.records[id] = updatedMovie;
+    return updatedMovie;
   },
 
   destroy(id: string): null {
-    delete fakeContacts.records[id];
+    delete fakeMovies.records[id];
     return null;
   },
 };
 
-////////////////////////////////////////////////////////////////////////////////
-// Handful of helper functions to be called from route loaders and actions
-export async function getContacts(query?: string | null) {
+export async function getMovies(query?: string | null) {
   await new Promise((resolve) => setTimeout(resolve, 500));
-  let contacts = await fakeContacts.getAll();
+  let movies = await fakeMovies.getAll();
   if (query) {
-    contacts = matchSorter(contacts, query, {
-      keys: ["first", "last"],
+    movies = matchSorter(movies, query, {
+      keys: ["title", "director"],
     });
   }
-  return contacts.sort(sortBy("last", "createdAt"));
+  return movies.sort(sortBy("title", "createdAt"));
 }
 
-export async function createEmptyContact() {
-  const contact = await fakeContacts.create({});
-  return contact;
+export async function createEmptyMovie() {
+  const movie = await fakeMovies.create({});
+  return movie;
 }
 
-export async function getContact(id: string) {
-  return fakeContacts.get(id);
+export async function getMovie(id: string) {
+  return fakeMovies.get(id);
 }
 
-export async function updateContact(id: string, updates: ContactMutation) {
-  const contact = await fakeContacts.get(id);
-  if (!contact) {
-    throw new Error(`No contact found for ${id}`);
+export async function updateMovie(id: string, updates: MovieMutation) {
+  const movie = await fakeMovies.get(id);
+  if (!movie) {
+    throw new Error(`No movie found for ${id}`);
   }
-  await fakeContacts.set(id, { ...contact, ...updates });
-  return contact;
+  await fakeMovies.set(id, { ...movie, ...updates });
+  return movie;
 }
 
-export async function deleteContact(id: string) {
-  fakeContacts.destroy(id);
+export async function deleteMovie(id: string) {
+  fakeMovies.destroy(id);
 }
 
 [
   {
-    avatar:
-      "https://sessionize.com/image/124e-400o400o2-wHVdAuNaxi8KJrgtN3ZKci.jpg",
-    first: "Shruti",
-    last: "Kapoor",
-    twitter: "@shrutikapoor08",
+    poster: "https://i.ebayimg.com/thumbs/images/g/aVwAAOSwlEdmZZI0/s-l1200.jpg",
+    title: "Inception",
+    director: "Christopher Nolan",
+    releaseDate: "2010-07-16",
+    link: "https://cuevana.biz/pelicula/27205/el-origen",
+    synopsis: "A thief who steals corporate secrets through the use of dream-sharing technology...",
   },
   {
-    avatar:
-      "https://sessionize.com/image/1940-400o400o2-Enh9dnYmrLYhJSTTPSw3MH.jpg",
-    first: "Glenn",
-    last: "Reyes",
-    twitter: "@glnnrys",
+    poster: "https://filmartgallery.com/cdn/shop/products/The-Matrix-Vintage-Movie-Poster-Original-French-1-panel-47x63.jpg?v=1680238937",
+    title: "The Matrix",
+    director: "Lana Wachowski, Lilly Wachowski",
+    releaseDate: "1999-03-31",
+    link: "https://cuevana.biz/pelicula/603/matrix",
+    synopsis: "A computer hacker learns from mysterious rebels about the true nature of his reality...",
   },
   {
-    avatar:
-      "https://sessionize.com/image/9273-400o400o2-3tyrUE3HjsCHJLU5aUJCja.jpg",
-    first: "Ryan",
-    last: "Florence",
+    poster: "https://pics.filmaffinity.com/Cadena_perpetua-576140557-large.jpg",
+    title: "The Shawshank Redemption",
+    director: "Frank Darabont",
+    releaseDate: "1994-09-23",
+    link: "https://cuevana.biz/pelicula/278/sueno-de-fuga",
+    synopsis: "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.",
   },
   {
-    avatar:
-      "https://sessionize.com/image/d14d-400o400o2-pyB229HyFPCnUcZhHf3kWS.png",
-    first: "Oscar",
-    last: "Newman",
-    twitter: "@__oscarnewman",
+    poster: "https://play-lh.googleusercontent.com/ZucjGxDqQ-cHIN-8YA1HgZx7dFhXkfnz73SrdRPmOOHEax08sngqZMR_jMKq0sZuv5P7-T2Z2aHJ1uGQiys",
+    title: "The Godfather",
+    director: "Francis Ford Coppola",
+    releaseDate: "1972-03-24",
+    link: "https://cuevana.biz/pelicula/238/el-padrino",
+    synopsis: "An organized crime dynasty's aging patriarch transfers control of his clandestine empire to his reluctant son.",
   },
   {
-    avatar:
-      "https://sessionize.com/image/fd45-400o400o2-fw91uCdGU9hFP334dnyVCr.jpg",
-    first: "Michael",
-    last: "Jackson",
+    poster: "https://pics.filmaffinity.com/El_caballero_oscuro-628375729-large.jpg",
+    title: "The Dark Knight",
+    director: "Christopher Nolan",
+    releaseDate: "2008-07-18",
+    link: "https://cuevana.biz/pelicula/155/batman-el-caballero-de-la-noche",
+    synopsis: "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of his greatest challenges as a symbol of hope.",
   },
   {
-    avatar:
-      "https://sessionize.com/image/b07e-400o400o2-KgNRF3S9sD5ZR4UsG7hG4g.jpg",
-    first: "Christopher",
-    last: "Chedeau",
-    twitter: "@Vjeux",
+    poster: "https://fr.web.img6.acsta.net/c_310_420/img/c0/23/c023b1dde271a455b4c5a93d0ae7497d.jpg",
+    title: "The Beast Within",
+    director: "Alexander J. Farrell",
+    releaseDate: "2024-06-26",
+    link: "https://cuevana.biz/pelicula/1300962/the-beast-within",
+    synopsis: "After a series of strange events lead her to question her family's isolated life in a fortified compound deep in the English wilderness, 10-year-old Willow follows her parents on one of their secret nocturnal excursions into the heart of the ancient forest.",
   },
   {
-    avatar:
-      "https://sessionize.com/image/262f-400o400o2-UBPQueK3fayaCmsyUc1Ljf.jpg",
-    first: "Cameron",
-    last: "Matheson",
-    twitter: "@cmatheson",
+    poster: "https://pics.filmaffinity.com/Black_Panther-705315552-large.jpg",
+    title: "Black Panther",
+    director: "Ryan Coogler",
+    releaseDate: "2018-02-16",
+    link: "https://cuevana.biz/pelicula/284054/pantera-negra",
+    synopsis: "T'Challa, the king of Wakanda, must step forward to lead his people into a new future and must confront a challenger from his country's past.",
   },
   {
-    avatar:
-      "https://sessionize.com/image/820b-400o400o2-Ja1KDrBAu5NzYTPLSC3GW8.jpg",
-    first: "Brooks",
-    last: "Lybrand",
-    twitter: "@BrooksLybrand",
+    poster: "https://play-lh.googleusercontent.com/ktmAySdXZ8wC8d2PyJbbGDEqoJF9jBqnQU9rwszE43Qcoxvzjgk_KhNmmZ6ZKonb4lcP_OF0TtsmaAly8mU",
+    title: "1974: Altair's possession",
+    director: "Víctor Dryere, Omar Noceda, Fernando Barreda Luna, Sergio Marroquín, Fausto Muñoz",
+    releaseDate: "2016-10-13",
+    link: "https://cuevana.biz/pelicula/416079/1974-la-posesion-de-altair",
+    synopsis: "A newlywed couple disappeared in 1974, their 8mm tapes reveal one of the most horrific events in Mexico's history.",
   },
   {
-    avatar:
-      "https://sessionize.com/image/df38-400o400o2-JwbChVUj6V7DwZMc9vJEHc.jpg",
-    first: "Alex",
-    last: "Anderson",
-    twitter: "@ralex1993",
+    poster: "https://es.web.img3.acsta.net/medias/nmedia/18/67/83/48/20084299.jpg",
+    title: "The Haunting in Connecticut",
+    director: "Peter Cornwell",
+    releaseDate: "2009-03-27",
+    link: "https://cuevana.biz/pelicula/18781/extranas-apariciones",
+    synopsis: "After a remote diamond mine collapses in far northern Canada, a 'big-rig' ice road driver must lead an impossible rescue mission over a frozen ocean to save the trapped miners.",
   },
   {
-    avatar:
-      "https://sessionize.com/image/5578-400o400o2-BMT43t5kd2U1XstaNnM6Ax.jpg",
-    first: "Kent C.",
-    last: "Dodds",
-    twitter: "@kentcdodds",
+    poster: "https://hips.hearstapps.com/hmg-prod/images/thanksgiving-881680111-large-64fd840007826.jpg",
+    title: "Black Friday",
+    director: "Eli Roth",
+    releaseDate: "2023-11-17",
+    link: "https://cuevana.biz/pelicula/1071215/viernes-negro",
+    synopsis: "After a riot ends in tragedy on Black Friday, a mysterious Thanksgiving-inspired killer terrorizes Plymouth Massachusetts - the birthplace of that (American) holiday.",
   },
-  {
-    avatar:
-      "https://sessionize.com/image/c9d5-400o400o2-Sri5qnQmscaJXVB8m3VBgf.jpg",
-    first: "Nevi",
-    last: "Shah",
-    twitter: "@nevikashah",
-  },
-  {
-    avatar:
-      "https://sessionize.com/image/2694-400o400o2-MYYTsnszbLKTzyqJV17w2q.png",
-    first: "Andrew",
-    last: "Petersen",
-  },
-  {
-    avatar:
-      "https://sessionize.com/image/907a-400o400o2-9TM2CCmvrw6ttmJiTw4Lz8.jpg",
-    first: "Scott",
-    last: "Smerchek",
-    twitter: "@smerchek",
-  },
-  {
-    avatar:
-      "https://sessionize.com/image/08be-400o400o2-WtYGFFR1ZUJHL9tKyVBNPV.jpg",
-    first: "Giovanni",
-    last: "Benussi",
-    twitter: "@giovannibenussi",
-  },
-  {
-    avatar:
-      "https://sessionize.com/image/f814-400o400o2-n2ua5nM9qwZA2hiGdr1T7N.jpg",
-    first: "Igor",
-    last: "Minar",
-    twitter: "@IgorMinar",
-  },
-  {
-    avatar:
-      "https://sessionize.com/image/fb82-400o400o2-LbvwhTVMrYLDdN3z4iEFMp.jpeg",
-    first: "Brandon",
-    last: "Kish",
-  },
-  {
-    avatar:
-      "https://sessionize.com/image/fcda-400o400o2-XiYRtKK5Dvng5AeyC8PiUA.png",
-    first: "Arisa",
-    last: "Fukuzaki",
-    twitter: "@arisa_dev",
-  },
-  {
-    avatar:
-      "https://sessionize.com/image/c8c3-400o400o2-PR5UsgApAVEADZRixV4H8e.jpeg",
-    first: "Alexandra",
-    last: "Spalato",
-    twitter: "@alexadark",
-  },
-  {
-    avatar:
-      "https://sessionize.com/image/7594-400o400o2-hWtdCjbdFdLgE2vEXBJtyo.jpg",
-    first: "Cat",
-    last: "Johnson",
-  },
-  {
-    avatar:
-      "https://sessionize.com/image/5636-400o400o2-TWgi8vELMFoB3hB9uPw62d.jpg",
-    first: "Ashley",
-    last: "Narcisse",
-    twitter: "@_darkfadr",
-  },
-  {
-    avatar:
-      "https://sessionize.com/image/6aeb-400o400o2-Q5tAiuzKGgzSje9ZsK3Yu5.JPG",
-    first: "Edmund",
-    last: "Hung",
-    twitter: "@_edmundhung",
-  },
-  {
-    avatar:
-      "https://sessionize.com/image/30f1-400o400o2-wJBdJ6sFayjKmJycYKoHSe.jpg",
-    first: "Clifford",
-    last: "Fajardo",
-    twitter: "@cliffordfajard0",
-  },
-  {
-    avatar:
-      "https://sessionize.com/image/6faa-400o400o2-amseBRDkdg7wSK5tjsFDiG.jpg",
-    first: "Erick",
-    last: "Tamayo",
-    twitter: "@ericktamayo",
-  },
-  {
-    avatar:
-      "https://sessionize.com/image/feba-400o400o2-R4GE7eqegJNFf3cQ567obs.jpg",
-    first: "Paul",
-    last: "Bratslavsky",
-    twitter: "@codingthirty",
-  },
-  {
-    avatar:
-      "https://sessionize.com/image/c315-400o400o2-spjM5A6VVfVNnQsuwvX3DY.jpg",
-    first: "Pedro",
-    last: "Cattori",
-    twitter: "@pcattori",
-  },
-  {
-    avatar:
-      "https://sessionize.com/image/eec1-400o400o2-HkvWKLFqecmFxLwqR9KMRw.jpg",
-    first: "Andre",
-    last: "Landgraf",
-    twitter: "@AndreLandgraf94",
-  },
-  {
-    avatar:
-      "https://sessionize.com/image/c73a-400o400o2-4MTaTq6ftC15hqwtqUJmTC.jpg",
-    first: "Monica",
-    last: "Powell",
-    twitter: "@indigitalcolor",
-  },
-  {
-    avatar:
-      "https://sessionize.com/image/cef7-400o400o2-KBZUydbjfkfGACQmjbHEvX.jpeg",
-    first: "Brian",
-    last: "Lee",
-    twitter: "@brian_dlee",
-  },
-  {
-    avatar:
-      "https://sessionize.com/image/f83b-400o400o2-Pyw3chmeHMxGsNoj3nQmWU.jpg",
-    first: "Sean",
-    last: "McQuaid",
-    twitter: "@SeanMcQuaidCode",
-  },
-  {
-    avatar:
-      "https://sessionize.com/image/a9fc-400o400o2-JHBnWZRoxp7QX74Hdac7AZ.jpg",
-    first: "Shane",
-    last: "Walker",
-    twitter: "@swalker326",
-  },
-  {
-    avatar:
-      "https://sessionize.com/image/6644-400o400o2-aHnGHb5Pdu3D32MbfrnQbj.jpg",
-    first: "Jon",
-    last: "Jensen",
-    twitter: "@jenseng",
-  },
-].forEach((contact) => {
-  fakeContacts.create({
-    ...contact,
-    id: `${contact.first.toLowerCase()}-${contact.last.toLocaleLowerCase()}`,
+].forEach((movie) => {
+  fakeMovies.create({
+    ...movie,
+    id: `${movie.title.toLowerCase().replace(/ /g, "-")}`,
   });
 });
