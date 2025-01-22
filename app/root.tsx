@@ -13,19 +13,19 @@ import {
 } from "@remix-run/react";
 
 import appStylesHref from "./app.css?url";
-import { getContacts } from "./data/data";
+import { getMovies } from "./data/data";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: appStylesHref },
 ];
 
 export const loader = async () => {
-  const contacts = await getContacts();
-  return json({ contacts });
+  const movies = await getMovies();
+  return json({ movies });
 };
 
 export default function App() {
-  const { contacts } = useLoaderData<typeof loader>();
+  const { movies } = useLoaderData<typeof loader>();
 
   return (
     <html lang="en">
@@ -37,12 +37,12 @@ export default function App() {
       </head>
       <body>
         <div id="sidebar">
-          <h1>Remix Contacts</h1>
+          <h1>Remix Movies</h1>
           <div>
             <Form id="search-form" role="search">
               <input
                 id="q"
-                aria-label="Search contacts"
+                aria-label="Search movies"
                 placeholder="Search"
                 type="search"
                 name="q"
@@ -54,26 +54,27 @@ export default function App() {
             </Form>
           </div>
           <nav>
-            {contacts.length ? (
+            <Link to="./index">Home</Link>
+            {movies.length ? (
               <ul>
-                {contacts.map((contact) => (
-                  <li key={contact.id}>
-                    <Link to={`contacts/${contact.id}`}>
-                      {contact.first || contact.last ? (
+                {movies.map((movies) => (
+                  <li key={movies.id}>
+                    <Link to={`movies/${movies.id}`}>
+                      {movies.title ? (
                         <>
-                          {contact.first} {contact.last}
+                          {movies.title}
                         </>
                       ) : (
-                        <i>No Name</i>
+                        <i>No Title</i>
                       )}{" "}
-                      {contact.favorite ? <span>★</span> : null}
+                      {movies.favorite ? <span>★</span> : null}
                     </Link>
                   </li>
                 ))}
               </ul>
             ) : (
               <p>
-                <i>No contacts</i>
+                <i>No movies</i>
               </p>
             )}
           </nav>

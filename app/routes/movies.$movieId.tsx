@@ -4,53 +4,51 @@ import { Form, useLoaderData } from "@remix-run/react";
 import type { FunctionComponent } from "react";
 import invariant from "tiny-invariant";
 
-import type { ContactRecord } from "../data/data";
+import type { MovieRecord } from "../data/data";
 
-import { getContact } from "../data/data";
+import { getMovie } from "../data/data";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
-  invariant(params.contactId, "Missing contactId param");
-  const contact = await getContact(params.contactId);
-  if (!contact) {
+  invariant(params.movieId, "Missing movieId param");
+  const movie = await getMovie(params.movieId);
+  if (!movie) {
     throw new Response("Not Found", { status: 404 });
   }
-  return json({ contact });
+  return json({ movie });
 };
 
-export default function Contact() {
-  const { contact } = useLoaderData<typeof loader>();
+export default function Movie() {
+  const { movie } = useLoaderData<typeof loader>();
 
   return (
-    <div id="contact">
+    <div id="movie">
       <div>
         <img
-          alt={`${contact.first} ${contact.last} avatar`}
-          key={contact.avatar}
-          src={contact.avatar}
+          alt={`${movie.title} poster`}
+          key={movie.poster}
+          src={movie.poster}
         />
       </div>
 
       <div>
         <h1>
-          {contact.first || contact.last ? (
+          {movie.title ? (
             <>
-              {contact.first} {contact.last}
+              {movie.title}
             </>
           ) : (
-            <i>No Name</i>
+            <i>No Title</i>
           )}{" "}
-          <Favorite contact={contact} />
+          <Favorite movie={movie} />
         </h1>
 
-        {contact.twitter ? (
+        {movie.director ? (
           <p>
-            <a href={`https://twitter.com/${contact.twitter}`}>
-              {contact.twitter}
-            </a>
+            <strong>Director:</strong> {movie.director}
           </p>
         ) : null}
 
-        {contact.notes ? <p>{contact.notes}</p> : null}
+        {movie.releaseDate ? <p>{movie.synopsis}</p> : null}
 
         <div>
           <Form action="edit">
@@ -71,6 +69,10 @@ export default function Contact() {
           >
             <button type="submit">Delete</button>
           </Form>
+
+          <a href={movie.link}>
+            <button type="button">See Movie</button>
+          </a>
         </div>
       </div>
     </div>
@@ -78,9 +80,9 @@ export default function Contact() {
 }
 
 const Favorite: FunctionComponent<{
-  contact: Pick<ContactRecord, "favorite">;
-}> = ({ contact }) => {
-  const favorite = contact.favorite;
+  movie: Pick<MovieRecord, "favorite">;
+}> = ({ movie }) => {
+  const favorite = movie.favorite;
 
   return (
     <Form method="post">
