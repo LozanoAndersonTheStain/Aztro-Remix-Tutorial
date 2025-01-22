@@ -109,7 +109,7 @@ export async function deleteMovie(id: string) {
     synopsis: "A computer hacker learns from mysterious rebels about the true nature of his reality...",
   },
   {
-    poster: "https://pics.filmaffinity.com/Cadena_perpetua-576140557-large.jpg",
+    poster: "https://images.squarespace-cdn.com/content/v1/657716dc6cd59d329f8cc943/1702303456952-89SVMRXKDUZ65S4279HJ/TSRL+Poster.jpg",
     title: "The Shawshank Redemption",
     director: "Frank Darabont",
     releaseDate: "1994-09-23",
@@ -117,7 +117,7 @@ export async function deleteMovie(id: string) {
     synopsis: "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.",
   },
   {
-    poster: "https://play-lh.googleusercontent.com/ZucjGxDqQ-cHIN-8YA1HgZx7dFhXkfnz73SrdRPmOOHEax08sngqZMR_jMKq0sZuv5P7-T2Z2aHJ1uGQiys",
+    poster: "https://www.thewestdale.ca/wp-content/uploads/2024/11/westdale_godfather_2.jpg",
     title: "The Godfather",
     director: "Francis Ford Coppola",
     releaseDate: "1972-03-24",
@@ -125,7 +125,7 @@ export async function deleteMovie(id: string) {
     synopsis: "An organized crime dynasty's aging patriarch transfers control of his clandestine empire to his reluctant son.",
   },
   {
-    poster: "https://pics.filmaffinity.com/El_caballero_oscuro-628375729-large.jpg",
+    poster: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEid2lRc4Tl3Apxj8darrwf6KeKiWcY67LCPbV3RSOkTymb_53uK_z2tMeUXxLd-2AiA4ktzkO747TaD0AYd10u_cHok0gm2aiTvRKRL1e3aHr3nZ9ZE7rDwhd6v3vI2W8ZprhVpkZGJ7lE/s1600/Cine+-+The+Dark+Knight+%25280%2529.jpg",
     title: "The Dark Knight",
     director: "Christopher Nolan",
     releaseDate: "2008-07-18",
@@ -141,7 +141,7 @@ export async function deleteMovie(id: string) {
     synopsis: "After a series of strange events lead her to question her family's isolated life in a fortified compound deep in the English wilderness, 10-year-old Willow follows her parents on one of their secret nocturnal excursions into the heart of the ancient forest.",
   },
   {
-    poster: "https://pics.filmaffinity.com/Black_Panther-705315552-large.jpg",
+    poster: "https://fr.web.img2.acsta.net/pictures/17/10/16/15/40/0883250.jpg",
     title: "Black Panther",
     director: "Ryan Coogler",
     releaseDate: "2018-02-16",
