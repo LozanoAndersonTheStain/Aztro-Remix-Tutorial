@@ -2,6 +2,11 @@
 
  - [Remix Docs](https://remix.run/docs)
 
+## Reference Images
+
+![Captura de pantalla 2025-01-22 191915](https://github.com/user-attachments/assets/d34e1e30-e1f5-4aae-a68a-68f29af0a42b)
+![Captura de pantalla 2025-01-22 193225](https://github.com/user-attachments/assets/b598d803-7c0f-4136-a9e3-ffa8cd5f3a7b)
+
 ## Quick Start
 
 * Paso 1: Clonar el repositorio: 
@@ -106,3 +111,5 @@ export default function Index() {
 <br>
 
 Si quieres aprender más sobre Remix, puedes visitar [Remix Docs](https://remix.run/docs)
+
+# Este proyecto es creado para fines educativos.
