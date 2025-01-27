@@ -1,12 +1,12 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import type { FunctionComponent } from "react";
 import invariant from "tiny-invariant";
 
 import type { MovieRecord } from "../data/data";
 
-import { getMovie } from "../data/data";
+import { createEmptyMovie, getMovie } from "../data/data";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   invariant(params.movieId, "Missing movieId param");
@@ -16,6 +16,11 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   }
   return json({ movie });
 };
+
+export const action  = async () => {
+  const movie = await createEmptyMovie();
+  return redirect(`/movies/${movie.id}/edit`);
+}
 
 export default function Movie() {
   const { movie } = useLoaderData<typeof loader>();
