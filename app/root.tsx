@@ -1,19 +1,21 @@
 import type { LinksFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 
 import {
   Form,
   Link,
   Links,
+  NavLink,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
   useLoaderData,
+  useNavigation,
 } from "@remix-run/react";
 
 import appStylesHref from "./app.css?url";
-import { getMovies } from "./data/data";
+import { getMovies, createEmptyMovie } from "./data/data";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: appStylesHref },
@@ -24,8 +26,14 @@ export const loader = async () => {
   return json({ movies });
 };
 
+export const action = async () => {
+  const movie = await createEmptyMovie();
+  return redirect(`/movies/${movie.id}/edit`);
+};
+
 export default function App() {
   const { movies } = useLoaderData<typeof loader>();
+  const navigation = useNavigation();
 
   return (
     <html lang="en">
@@ -59,16 +67,15 @@ export default function App() {
               <ul>
                 {movies.map((movies) => (
                   <li key={movies.id}>
-                    <Link to={`movies/${movies.id}`}>
-                      {movies.title ? (
-                        <>
-                          {movies.title}
-                        </>
-                      ) : (
-                        <i>No Title</i>
-                      )}{" "}
-                      {movies.favorite ? <span>★</span> : null}
-                    </Link>
+                    <NavLink
+                      className={({ isActive, isPending }) => (isActive ? "active" : isPending ? "pending" : "")}
+                      to={`movies/${movies.id}`}
+                    >
+                      <Link to={`movies/${movies.id}`}>
+                        {movies.title ? <>{movies.title}</> : <i>No Title</i>}{" "}
+                        {movies.favorite ? <span>★</span> : null}
+                      </Link>
+                    </NavLink>
                   </li>
                 ))}
               </ul>
@@ -79,7 +86,12 @@ export default function App() {
             )}
           </nav>
         </div>
-        <div id="detail">
+        <div
+          className={
+            navigation.state === "loading" ? "loading" : ""
+          }
+          id="detail"
+        >
           <Outlet />
         </div>
         <ScrollRestoration />
